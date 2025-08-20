@@ -1,0 +1,9 @@
+HEALTH ENDPOINT TEST
+Status Code: 200
+Content-Type: application/json
+JSON: {"status": "healthy"}
+Assertions:
+ - status_code_is_200: PASS
+ - content_type_is_json: PASS
+ - body_is_expected: PASS
+OVERALL: PASS

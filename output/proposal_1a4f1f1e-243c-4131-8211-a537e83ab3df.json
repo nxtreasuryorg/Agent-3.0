@@ -1,0 +1,12 @@
+{
+  "proposal_id": "1a4f1f1e-243c-4131-8211-a537e83ab3df",
+  "report": "Risk analysis OK. Generated payments.",
+  "payments": [
+    {
+      "payment_id": "pay-1",
+      "recipient_wallet": "0x123",
+      "amount": 100.0,
+      "reference": "INV-001"
+    }
+  ]
+}
