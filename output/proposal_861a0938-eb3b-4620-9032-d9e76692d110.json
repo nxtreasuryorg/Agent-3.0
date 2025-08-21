@@ -1,0 +1,12 @@
+{
+  "proposal_id": "861a0938-eb3b-4620-9032-d9e76692d110",
+  "report": "Risk analysis OK. Generated payments with new API spec.",
+  "payments": [
+    {
+      "payment_id": "pay-new-1",
+      "recipient_wallet": "0x456",
+      "amount": 200.0,
+      "reference": "INV-002"
+    }
+  ]
+}

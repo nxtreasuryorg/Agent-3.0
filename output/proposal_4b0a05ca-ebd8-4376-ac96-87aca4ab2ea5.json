@@ -1,0 +1,12 @@
+{
+  "proposal_id": "test-proposal-crew-fail",
+  "report": "Test proposal for crew failure",
+  "payments": [
+    {
+      "payment_id": "pay-1",
+      "recipient_wallet": "0x456",
+      "amount": 100.0,
+      "reference": "TEST-001"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "proposal_id": "test-proposal-partial",
+  "report": "Test proposal for partial approval",
+  "payments": [
+    {
+      "payment_id": "pay-1",
+      "recipient_wallet": "0x456",
+      "amount": 100.0,
+      "reference": "TEST-001"
+    },
+    {
+      "payment_id": "pay-2",
+      "recipient_wallet": "0x789",
+      "amount": 200.0,
+      "reference": "TEST-002"
+    },
+    {
+      "payment_id": "pay-3",
+      "recipient_wallet": "0xabc",
+      "amount": 300.0,
+      "reference": "TEST-003"
+    }
+  ]
+}

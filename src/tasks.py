@@ -10,13 +10,17 @@ class TreasuryTasks:
         # self.payment_executor = PaymentExecutorTool()
 
     def risk_assessment_task(self, context):
+        excel_file_path = context.get('excel_file_path', 'unknown')
         risk_assessment_task = Task(
             description=f"""
-            Analyze the financial data provided in the context and evaluate risks based on:
+            Analyze the financial data provided in the Excel file and evaluate risks based on:
             - Data integrity and completeness.
             - User-defined constraints: {context.get('config', {}).get('risk_config', {})}
             - Payment amounts and recipients.
             - Overall financial exposure.
+            
+            IMPORTANT: Use the Excel Parser Tool with file_path: {excel_file_path}
+            
             Generate a detailed risk assessment report with risk scores and recommendations.
             """,
             expected_output="""
@@ -60,9 +64,20 @@ class TreasuryTasks:
         return payment_proposal_task
 
     def payment_execution_task(self, context):
+        approval_decision = context.get('approval_decision', 'unknown')
+        approved_payments = context.get('approved_payments', [])
+        proposal_data = context.get('proposal_data', {})
+        
         payment_execution_task = Task(
-            description="""
-            Execute the approved payments based on the user's approval details. The final report should be well-formatted and structured.
+            description=f"""
+            Execute the approved payments based on the user's approval details:
+            - Approval Decision: {approval_decision}
+            - Approved Payments: {approved_payments}
+            - Proposal Data: {proposal_data}
+            - Custody Wallet: {context.get('custody_wallet', 'not provided')}
+            
+            Use the Treasury USDT Payment Tool to execute the approved payments.
+            The final report should be well-formatted and structured.
             """,
             expected_output="""
             A JSON object containing the 'proposal_id', 'execution_status', and a detailed breakdown of
@@ -82,7 +97,6 @@ class TreasuryTasks:
             expected_output_type="json",
             agent=self.agents.payment_specialist(),
             tools=[self.payment_executor],
-            context=context,
             human_in_the_loop=True
         )
         return payment_execution_task

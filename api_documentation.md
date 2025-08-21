@@ -34,8 +34,6 @@ The API follows a stateful, multi-step workflow:
     ```json
     {
       "user_id": "string",
-      "custody_wallet": "string",
-      "private_key": "string",
       "risk_config": {
         "min_balance_usd": "number",
         "transaction_limits": {
@@ -88,6 +86,8 @@ The API follows a stateful, multi-step workflow:
     ```json
     {
       "proposal_id": "string",
+      "custody_wallet": "string",
+      "private_key": "string",
       "approval_decision": "approve_all | reject_all | partial",
       "approved_payments": ["payment_id_1", ...],
       "comments": "string"

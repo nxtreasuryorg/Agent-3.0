@@ -1,0 +1,9 @@
+{
+  "execution_status": "SUCCESS",
+  "message": "All payments executed successfully",
+  "executed_payments": [
+    "pay-1",
+    "pay-2"
+  ],
+  "failed_payments": []
+}

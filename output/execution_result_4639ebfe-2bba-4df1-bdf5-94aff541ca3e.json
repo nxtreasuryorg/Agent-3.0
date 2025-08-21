@@ -1,0 +1,6 @@
+{
+  "execution_status": "SUCCESS",
+  "message": "All payments rejected as requested",
+  "executed_payments": [],
+  "failed_payments": []
+}

@@ -19,7 +19,7 @@ def _error(message: str, code: int):
 
 def _validate_config(cfg: Dict[str, Any]) -> None:
     """Raises ValueError if config is invalid per api_documentation.md."""
-    required_top = ["user_id", "custody_wallet", "risk_config"]
+    required_top = ["user_id", "risk_config"]
     for k in required_top:
         if k not in cfg:
             raise ValueError(f"Missing required field: {k}")
@@ -34,6 +34,28 @@ def _validate_config(cfg: Dict[str, Any]) -> None:
     for k in ("single", "daily"):
         if k not in tx:
             raise ValueError(f"risk_config.transaction_limits.{k} is required")
+    # user_notes is optional per API documentation
+
+def _validate_payment_approval(data: Dict[str, Any]) -> None:
+    """Raises ValueError if payment approval data is invalid per api_documentation.md."""
+    required_fields = ["proposal_id", "custody_wallet", "private_key", "approval_decision"]
+    for field in required_fields:
+        if field not in data:
+            raise ValueError(f"Missing required field: {field}")
+    
+    approval_decision = data.get("approval_decision")
+    valid_decisions = ["approve_all", "reject_all", "partial"]
+    if approval_decision not in valid_decisions:
+        raise ValueError(f"Invalid approval_decision. Must be one of: {', '.join(valid_decisions)}")
+    
+    # For partial approval, approved_payments is required
+    if approval_decision == "partial":
+        if "approved_payments" not in data:
+            raise ValueError("approved_payments is required for partial approval")
+        if not isinstance(data["approved_payments"], list):
+            raise ValueError("approved_payments must be an array")
+    
+    # comments is optional per API documentation
 
 def _make_output_dir() -> str:
     root = os.path.abspath(os.path.dirname(__file__))
@@ -52,6 +74,14 @@ def generate_payment_proposal_adapter(context: Dict[str, Any]):
     from crew import TreasuryCrew
     crew = TreasuryCrew()
     return crew.generate_payment_proposal(context)
+
+def execute_payment_approval_adapter(context: Dict[str, Any]):
+    """DI-friendly adapter to execute payment approvals. Tests monkeypatch this symbol.
+    Import crew lazily to avoid side effects at import-time.
+    """
+    from crew import TreasuryCrew
+    crew = TreasuryCrew()
+    return crew.execute_payments(context)
 
 @app.route('/submit_request', methods=['POST'])
 def submit_request():
@@ -105,8 +135,14 @@ def submit_request():
     except Exception as e:
         return _error(f"Crew error: {e}", 500)
 
-    # Normalize result to dict
-    if isinstance(result, str):
+    # Normalize result to dict - handle CrewOutput objects
+    if hasattr(result, 'raw'):
+        # CrewOutput object - extract the raw JSON string
+        try:
+            result = json.loads(result.raw)
+        except Exception:
+            result = {"raw": result.raw}
+    elif isinstance(result, str):
         try:
             result = json.loads(result)
         except Exception:
@@ -150,12 +186,110 @@ def get_payment_proposal(proposal_id):
 @app.route('/submit_payment_approval', methods=['POST'])
 def submit_payment_approval():
     """Submits the human decision on the payment proposal."""
-    pass
+    # Check if request has JSON data
+    if not request.is_json:
+        return _error("Request must be JSON", 400)
+    
+    try:
+        data = request.get_json()
+        if not data:
+            return _error("Missing JSON body", 400)
+    except Exception:
+        return _error("Invalid JSON syntax", 400)
+    
+    # Validate request data per API documentation
+    try:
+        _validate_payment_approval(data)
+    except ValueError as ve:
+        return _error(str(ve), 400)
+    
+    proposal_id = data["proposal_id"]
+    
+    # Check if proposal exists
+    if proposal_id not in proposals:
+        return _error("Proposal not found", 404)
+    
+    # Get existing proposal data
+    proposal_data = proposals[proposal_id]
+    
+    # Prepare context for payment execution
+    context = {
+        "proposal_id": proposal_id,
+        "proposal_data": proposal_data,
+        "custody_wallet": data["custody_wallet"],
+        "private_key": data["private_key"],
+        "approval_decision": data["approval_decision"],
+        "approved_payments": data.get("approved_payments", []),
+        "comments": data.get("comments", "")
+    }
+    
+    # Execute payment approval via crew
+    try:
+        execution_result = execute_payment_approval_adapter(context)
+    except Exception as e:
+        return _error(f"Payment execution failed: {e}", 500)
+    
+    # Normalize execution result - handle CrewOutput objects
+    if hasattr(execution_result, 'raw'):
+        # CrewOutput object - extract the raw JSON string
+        try:
+            execution_result = json.loads(execution_result.raw)
+        except Exception:
+            execution_result = {"execution_status": "FAILURE", "message": execution_result.raw}
+    elif isinstance(execution_result, str):
+        try:
+            execution_result = json.loads(execution_result)
+        except Exception:
+            execution_result = {"execution_status": "FAILURE", "message": execution_result}
+    
+    # Extract execution status and message
+    execution_status = execution_result.get("execution_status", "FAILURE")
+    message = execution_result.get("message", "Payment execution completed")
+    
+    # Update proposal with execution results
+    proposals[proposal_id]["execution_result"] = execution_result
+    
+    # Save execution results to file
+    out_dir = _make_output_dir()
+    result_path = os.path.join(out_dir, f"execution_result_{proposal_id}.json")
+    try:
+        with open(result_path, 'w') as f:
+            json.dump(execution_result, f, indent=2)
+    except Exception:
+        # Don't fail request purely due to IO
+        pass
+    
+    # Return success response per API documentation
+    response_body = {
+        "success": True,
+        "execution_status": execution_status,
+        "message": message,
+        "next_step": f"GET /payment_execution_result/{proposal_id}"
+    }
+    
+    return jsonify(response_body), 200
 
 @app.route('/payment_execution_result/<string:proposal_id>', methods=['GET'])
 def get_payment_execution_result(proposal_id):
     """Returns the detailed result of the payment execution."""
-    pass
+    try:
+        # Check if proposal exists
+        if proposal_id not in proposals:
+            return _error("Proposal not found", 404)
+        
+        proposal_data = proposals[proposal_id]
+        
+        # Check if execution result exists
+        if 'execution_result' not in proposal_data:
+            return _error("No execution result found for this proposal", 404)
+        
+        execution_result = proposal_data['execution_result']
+        
+        # Return execution result per API documentation
+        return jsonify(execution_result), 200
+        
+    except Exception as e:
+        return _error(f"Internal error: {e}", 500)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001, debug=True)

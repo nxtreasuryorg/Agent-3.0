@@ -1,0 +1,12 @@
+{
+  "proposal_id": "3988cb64-f0fa-4545-ab4b-fe0eb7dc08e3",
+  "report": "Risk analysis OK. Backward compatibility confirmed.",
+  "payments": [
+    {
+      "payment_id": "pay-compat-1",
+      "recipient_wallet": "0xabc",
+      "amount": 400.0,
+      "reference": "INV-004"
+    }
+  ]
+}
