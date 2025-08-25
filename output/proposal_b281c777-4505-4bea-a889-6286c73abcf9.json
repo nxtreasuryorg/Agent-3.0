@@ -1,0 +1,30 @@
+{
+  "proposal_id": "b281c777-4505-4bea-a889-6286c73abcf9",
+  "report": "Generated proposal based on risk analysis. The balance after all transactions is below the minimum balance of 500.0 USDT, indicating a potential risk. It is recommended to ensure the balance remains above the minimum balance after all transactions and to monitor future transactions to maintain compliance with user-defined constraints.",
+  "payments": [
+    {
+      "payment_id": "pay-0001",
+      "recipient_wallet": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+      "amount": 150.75,
+      "reference": "Development services (Low Risk)"
+    },
+    {
+      "payment_id": "pay-0002",
+      "recipient_wallet": "0x1234567890123456789012345678901234567890",
+      "amount": 99.75,
+      "reference": "Marketing services (Low Risk)"
+    },
+    {
+      "payment_id": "pay-0003",
+      "recipient_wallet": "0xabcdef1234567890abcdef1234567890abcdef12",
+      "amount": 250.0,
+      "reference": "Consulting fees (Low Risk)"
+    },
+    {
+      "payment_id": "pay-0004",
+      "recipient_wallet": "0x9876543210987654321098765432109876543210",
+      "amount": 75.5,
+      "reference": "Software license (Low Risk)"
+    }
+  ]
+}

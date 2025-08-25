@@ -1,0 +1,30 @@
+{
+  "proposal_id": "af3550af-f57c-4982-9ca0-0c3399f535a6",
+  "report": "Generated proposal based on risk analysis. The risk assessment indicates a low risk level. Recommendations include ensuring ongoing monitoring of transaction amounts to stay within defined limits and verifying the legitimacy of recipients periodically to mitigate fraud risks.",
+  "payments": [
+    {
+      "payment_id": "pay-00001",
+      "recipient_wallet": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+      "amount": 150.75,
+      "reference": "Development services"
+    },
+    {
+      "payment_id": "pay-00002",
+      "recipient_wallet": "0x1234567890123456789012345678901234567890",
+      "amount": 99.75,
+      "reference": "Marketing services"
+    },
+    {
+      "payment_id": "pay-00003",
+      "recipient_wallet": "0xabcdef1234567890abcdef1234567890abcdef12",
+      "amount": 250.0,
+      "reference": "Consulting fees"
+    },
+    {
+      "payment_id": "pay-00004",
+      "recipient_wallet": "0x9876543210987654321098765432109876543210",
+      "amount": 75.5,
+      "reference": "Software license"
+    }
+  ]
+}

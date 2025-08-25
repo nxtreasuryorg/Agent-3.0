@@ -1,0 +1,30 @@
+{
+  "proposal_id": "251bfced-92ea-4144-9c94-35eb8ebd2edc",
+  "report": "Generated payment proposal based on risk analysis. The risk assessment indicates a low risk level. Recommendations include continuing to monitor transaction amounts to ensure they remain within defined limits and ensuring all future transactions are documented with clear purposes and recipient details.",
+  "payments": [
+    {
+      "payment_id": "pay-00001",
+      "recipient_wallet": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+      "amount": 150.75,
+      "reference": "Development services"
+    },
+    {
+      "payment_id": "pay-00002",
+      "recipient_wallet": "0x1234567890123456789012345678901234567890",
+      "amount": 99.75,
+      "reference": "Marketing services"
+    },
+    {
+      "payment_id": "pay-00003",
+      "recipient_wallet": "0xabcdef1234567890abcdef1234567890abcdef12",
+      "amount": 250.0,
+      "reference": "Consulting fees"
+    },
+    {
+      "payment_id": "pay-00004",
+      "recipient_wallet": "0x9876543210987654321098765432109876543210",
+      "amount": 75.5,
+      "reference": "Software license"
+    }
+  ]
+}

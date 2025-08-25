@@ -1,0 +1,27 @@
+{
+  "proposal_id": "b281c777-4505-4bea-a889-6286c73abcf9",
+  "execution_status": "SUCCESS",
+  "executed_payments": [
+    {
+      "payment_id": "pay-0001",
+      "status": "SUCCESS",
+      "transaction_hash": "TXAQCN7PQW"
+    },
+    {
+      "payment_id": "pay-0002",
+      "status": "SUCCESS",
+      "transaction_hash": "TXJLOUQXZP"
+    },
+    {
+      "payment_id": "pay-0003",
+      "status": "SUCCESS",
+      "transaction_hash": "TXQR05YOU7"
+    },
+    {
+      "payment_id": "pay-0004",
+      "status": "SUCCESS",
+      "transaction_hash": "TXSUHVT3JN"
+    }
+  ],
+  "failed_payments": []
+}

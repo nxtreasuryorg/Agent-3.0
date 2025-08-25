@@ -1,0 +1,30 @@
+{
+  "proposal_id": "03a316e7-b2d4-4285-90af-02eb0b8dbf59",
+  "report": "Generated proposal based on risk analysis. All transactions have complete and valid data, and all risk assessments indicate low risk. The total transaction amount is $1576.0, which is reasonable given the initial deposit. Recommendations include continuing to monitor transaction amounts, ensuring the balance does not drop below the minimum required balance, and regularly reviewing transaction patterns for any unusual activity.",
+  "payments": [
+    {
+      "payment_id": "pay-00001",
+      "recipient_wallet": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+      "amount": 150.75,
+      "reference": "Development services"
+    },
+    {
+      "payment_id": "pay-00002",
+      "recipient_wallet": "0x1234567890123456789012345678901234567890",
+      "amount": 99.75,
+      "reference": "Marketing services"
+    },
+    {
+      "payment_id": "pay-00003",
+      "recipient_wallet": "0xabcdef1234567890abcdef1234567890abcdef12",
+      "amount": 250.0,
+      "reference": "Consulting fees"
+    },
+    {
+      "payment_id": "pay-00004",
+      "recipient_wallet": "0x9876543210987654321098765432109876543210",
+      "amount": 75.5,
+      "reference": "Software license"
+    }
+  ]
+}

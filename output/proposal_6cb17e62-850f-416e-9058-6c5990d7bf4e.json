@@ -1,0 +1,36 @@
+{
+  "proposal_id": "6cb17e62-850f-416e-9058-6c5990d7bf4e",
+  "report": "Generated proposal based on risk analysis. All transactions have been assessed and deemed to be within acceptable risk levels. The data integrity is complete, user-defined constraints are met, and the financial exposure is low. Recommendations include continued monitoring of transactions, periodic verification of recipient legitimacy, and ensuring the balance remains above the minimum threshold.",
+  "payments": [
+    {
+      "payment_id": "pay-00001",
+      "recipient_wallet": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+      "amount": 150.75,
+      "reference": "Development services"
+    },
+    {
+      "payment_id": "pay-00002",
+      "recipient_wallet": "0x1234567890123456789012345678901234567890",
+      "amount": 99.75,
+      "reference": "Marketing services"
+    },
+    {
+      "payment_id": "pay-00003",
+      "recipient_wallet": "Treasury",
+      "amount": 1000.0,
+      "reference": "Initial funding"
+    },
+    {
+      "payment_id": "pay-00004",
+      "recipient_wallet": "0xabcdef1234567890abcdef1234567890abcdef12",
+      "amount": 250.0,
+      "reference": "Consulting fees"
+    },
+    {
+      "payment_id": "pay-00005",
+      "recipient_wallet": "0x9876543210987654321098765432109876543210",
+      "amount": 75.5,
+      "reference": "Software license"
+    }
+  ]
+}
