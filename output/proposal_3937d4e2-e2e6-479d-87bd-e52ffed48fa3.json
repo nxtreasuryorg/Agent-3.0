@@ -1,0 +1,30 @@
+{
+  "proposal_id": "3937d4e2-e2e6-479d-87bd-e52ffed48fa3",
+  "report": "Generated proposal based on risk analysis. The risk assessment indicates low risk in data integrity, user-defined constraints, and payment amounts and recipients. However, there is a medium risk due to the overall financial exposure after the transactions. It is recommended to monitor the account balance, consider additional funding to cover the deficit, and regularly review transaction limits and constraints.",
+  "payments": [
+    {
+      "payment_id": "pay-0001",
+      "recipient_wallet": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+      "amount": 150.75,
+      "reference": "Development services"
+    },
+    {
+      "payment_id": "pay-0002",
+      "recipient_wallet": "0x1234567890123456789012345678901234567890",
+      "amount": 99.75,
+      "reference": "Marketing services"
+    },
+    {
+      "payment_id": "pay-0003",
+      "recipient_wallet": "0xabcdef1234567890abcdef1234567890abcdef12",
+      "amount": 250.0,
+      "reference": "Consulting fees"
+    },
+    {
+      "payment_id": "pay-0004",
+      "recipient_wallet": "0x9876543210987654321098765432109876543210",
+      "amount": 75.5,
+      "reference": "Software license"
+    }
+  ]
+}

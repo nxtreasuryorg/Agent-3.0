@@ -1,0 +1,30 @@
+{
+  "proposal_id": "05b6c42e-b7b8-4f3c-a0dc-44f43ddced0b",
+  "report": "Generated proposal based on risk analysis. The risk assessment indicates low risk across all evaluated categories: Data Integrity and Completeness, User-Defined Constraints, Payment Amounts and Recipients, and Overall Financial Exposure. Recommendations include continued monitoring of transactions, implementation of additional checks for unusual patterns, and maintaining an adequate balance to cover transaction needs.",
+  "payments": [
+    {
+      "payment_id": "pay-00001",
+      "recipient_wallet": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+      "amount": 150.75,
+      "reference": "Development services"
+    },
+    {
+      "payment_id": "pay-00002",
+      "recipient_wallet": "0x1234567890123456789012345678901234567890",
+      "amount": 99.75,
+      "reference": "Marketing services"
+    },
+    {
+      "payment_id": "pay-00003",
+      "recipient_wallet": "0xabcdef1234567890abcdef1234567890abcdef12",
+      "amount": 250.0,
+      "reference": "Consulting fees"
+    },
+    {
+      "payment_id": "pay-00004",
+      "recipient_wallet": "0x9876543210987654321098765432109876543210",
+      "amount": 75.5,
+      "reference": "Software license"
+    }
+  ]
+}

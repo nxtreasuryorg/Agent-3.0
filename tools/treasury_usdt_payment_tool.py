@@ -21,6 +21,7 @@ class USDTPaymentInput(BaseModel):
     amount_usdt: float = Field(default=0.0, description="Amount of USDT to transfer")
     private_key: str = Field(default="", description="Private key for transaction signing (encrypted)")
     transaction_id: str = Field(default="", description="Transaction ID for status checks")
+    payment_id: str = Field(default="", description="Optional payment identifier for tracking in results")
 
 
 class TreasuryUSDTPaymentTool(BaseTool):
@@ -95,14 +96,14 @@ class TreasuryUSDTPaymentTool(BaseTool):
             print(f"Warning: Could not load USDT contract: {str(e)}")
 
     def _run(self, action: str, wallet_address: str = "", recipient_address: str = "", 
-             amount_usdt: float = 0.0, private_key: str = "", transaction_id: str = "") -> str:
+             amount_usdt: float = 0.0, private_key: str = "", transaction_id: str = "", payment_id: str = "") -> str:
         
         if action == "check_balance":
             return self._check_balance(wallet_address)
         elif action == "estimate_gas":
             return self._estimate_gas()
         elif action == "execute_payment":
-            return self._execute_payment(wallet_address, recipient_address, amount_usdt, private_key)
+            return self._execute_payment(wallet_address, recipient_address, amount_usdt, private_key, payment_id=payment_id)
         elif action == "validate_address":
             return self._validate_address(wallet_address or recipient_address)
         elif action == "check_status":
@@ -179,82 +180,91 @@ class TreasuryUSDTPaymentTool(BaseTool):
         return result
 
     def _execute_payment(self, wallet_address: str, recipient_address: str, 
-                        amount_usdt: float, private_key: str) -> str:
-        """Execute USDT payment (simulated for testing)."""
-        if not wallet_address or not recipient_address:
-            return "Error: Both wallet address and recipient address are required."
-        
+                        amount_usdt: float, private_key: str, payment_id: str = "") -> str:
+        """Execute USDT payment (simulated for testing) and return structured JSON string.
+
+        This method never raises and instead returns a JSON string with fields:
+        {"payment_id","status","reason"? ,"transaction_id"?, "from","to","amount", ...}
+        """
+        def fail(reason: str):
+            payload = {
+                "payment_id": payment_id or "",
+                "status": "FAILED",
+                "reason": reason,
+                "from": wallet_address or "",
+                "to": recipient_address or "",
+                "amount": amount_usdt,
+                "timestamp": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            }
+            return json.dumps(payload)
+
+        # Basic validations
+        if not recipient_address:
+            return fail("MISSING_RECIPIENT_WALLET")
+        if not wallet_address:
+            return fail("MISSING_SENDER_WALLET")
         if amount_usdt <= 0:
-            return "Error: Amount must be greater than 0."
-        
+            return fail("INVALID_AMOUNT")
         if not private_key:
-            return "Error: Private key is required for transaction signing."
-        
+            return fail("MISSING_PRIVATE_KEY")
+
         # Generate mock transaction ID
         tx_id = 'TX' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
-        
-        # Validate addresses
+
+        # Validate addresses (when connected to web3)
         try:
             if self._w3:
                 Web3.to_checksum_address(wallet_address)
                 Web3.to_checksum_address(recipient_address)
         except Exception as e:
-            return f"Error: Invalid address format - {str(e)}"
-        
+            return fail(f"INVALID_ADDRESS_FORMAT: {str(e)}")
+
         # Check minimum amount
         if amount_usdt < 0.1:
-            return f"Error: Amount too low: {amount_usdt} USDT. Minimum is 0.1 USDT."
-        
+            return fail(f"AMOUNT_TOO_LOW: minimum 0.1 USDT")
+
         # Simulate processing time
         processing_time = random.randint(1, 3)  # 1-3 seconds simulation
-        
+
         # Mock execution with realistic scenarios
         success_rate = 0.98  # 98% success rate
-        
+
         if random.random() < success_rate:
             status = "SUCCESS"
             estimated_completion = datetime.now() + timedelta(
                 minutes=random.randint(1, 5)
             )
-            
-            # SIMULATION MODE - Return success message instead of actual transaction
-            result = f"USDT Payment Execution Result (SIMULATION MODE):\n"
-            result += f"Transaction ID: {tx_id}\n"
-            result += f"Status: {status}\n"
-            result += f"From: {wallet_address}\n"
-            result += f"To: {recipient_address}\n"
-            result += f"Amount: {amount_usdt} USDT\n"
-            result += f"Processing Time: {processing_time} seconds\n"
-            result += f"Estimated Completion: {estimated_completion.strftime('%Y-%m-%d %H:%M:%S')}\n"
-            result += f"Gas Cost: ~0.0001 ETH (estimated)\n"
-            result += f"✅ SIMULATION: Transaction would be successful\n"
-            result += f"📝 Note: This is a simulation. Real transaction would execute here.\n"
-            result += f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
-            
-            return result
-            
+            payload = {
+                "payment_id": payment_id or "",
+                "status": status,
+                "transaction_id": tx_id,
+                "from": wallet_address,
+                "to": recipient_address,
+                "amount": amount_usdt,
+                "processing_time_seconds": processing_time,
+                "estimated_completion": estimated_completion.strftime('%Y-%m-%d %H:%M:%S'),
+                "note": "SIMULATION: Transaction would be successful"
+            }
+            return json.dumps(payload)
         else:
-            # Simulate various failure scenarios
             failures = [
                 "INSUFFICIENT_USDT_BALANCE",
-                "INSUFFICIENT_ETH_FOR_GAS", 
+                "INSUFFICIENT_ETH_FOR_GAS",
                 "INVALID_RECIPIENT_ADDRESS",
                 "NETWORK_TIMEOUT"
             ]
             status = random.choice(failures)
-            
-            result = f"USDT Payment Execution Result (SIMULATION MODE):\n"
-            result += f"Transaction ID: {tx_id}\n"
-            result += f"Status: {status}\n"
-            result += f"From: {wallet_address}\n"
-            result += f"To: {recipient_address}\n"
-            result += f"Amount: {amount_usdt} USDT\n"
-            result += f"Processing Time: {processing_time} seconds\n"
-            result += f"❌ SIMULATION: Transaction would fail due to {status.replace('_', ' ').lower()}\n"
-            result += f"📝 Note: This is a simulation. Real transaction would fail here.\n"
-            result += f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
-            
-            return result
+            payload = {
+                "payment_id": payment_id or "",
+                "status": "FAILED",
+                "reason": status,
+                "from": wallet_address,
+                "to": recipient_address,
+                "amount": amount_usdt,
+                "processing_time_seconds": processing_time,
+                "note": "SIMULATION: Transaction would fail"
+            }
+            return json.dumps(payload)
 
     def _validate_address(self, address: str) -> str:
         """Validate if an address is a valid Ethereum address."""

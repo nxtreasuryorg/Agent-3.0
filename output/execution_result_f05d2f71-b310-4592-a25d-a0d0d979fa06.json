@@ -1,0 +1,12 @@
+{
+  "proposal_id": "f05d2f71-b310-4592-a25d-a0d0d979fa06",
+  "execution_status": "PARTIAL_SUCCESS",
+  "executed_payments": [
+    {
+      "payment_id": "pay-00002",
+      "status": "SUCCESS",
+      "transaction_hash": "TXIRLURC13"
+    }
+  ],
+  "failed_payments": []
+}

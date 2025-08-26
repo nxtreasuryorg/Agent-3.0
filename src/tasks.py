@@ -97,7 +97,7 @@ class TreasuryTasks:
             expected_output_type="json",
             agent=self.agents.payment_specialist(),
             tools=[self.payment_executor],
-            human_in_the_loop=True
+            human_in_the_loop=False
         )
         return payment_execution_task
 

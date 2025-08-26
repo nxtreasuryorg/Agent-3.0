@@ -57,7 +57,7 @@ class TreasuryCrew:
     def execute_payments(self, context: Dict[str, Any]):
         """Run the execution pipeline and return the model output."""
         crew = self.build_execution_crew(context)
-        return crew.kickoff()
+        return crew.kickoff(inputs=context)
 
 
 # Convenience singletons/functions for simple imports (e.g., from crew import generate_payment_proposal)
