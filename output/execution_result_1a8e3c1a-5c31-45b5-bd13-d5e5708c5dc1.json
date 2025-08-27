@@ -1,4 +1,0 @@
-{
-  "execution_status": "FAILURE",
-  "message": "```json\n{\n    \"proposal_id\": \"1a8e3c1a-5c31-45b5-bd13-d5e5708c5dc1\",\n    \"execution_status\": \"PARTIAL_SUCCESS\",\n    \"executed_payments\": [\n        {\n            \"payment_id\": \"pay-00002\",\n            \"status\": \"SUCCESS\",\n            \"transaction_hash\": \"TXGKMUC3VX\"\n        }\n    ],\n    \"failed_payments\": []\n}\n```"
-}

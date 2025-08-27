@@ -6,6 +6,7 @@ import random
 import string
 import os
 import json
+from dotenv import load_dotenv, find_dotenv
 from web3 import Web3
 from web3.exceptions import (
     TransactionNotFound, TimeExhausted, MismatchedABI, 
@@ -36,6 +37,11 @@ class TreasuryUSDTPaymentTool(BaseTool):
     def __init__(self):
         super().__init__()
         # Initialize instance variables after super().__init__()
+        # Prefer local .env for dev; otherwise rely on process env (e.g., Render)
+        env_path = find_dotenv()
+        if env_path:
+            load_dotenv(env_path, override=True)
+
         self._infura_key = os.getenv('INFURA_API_KEY')
         self._usdt_contract_address = '0xdAC17F958D2ee523a2206206994597C13D831ec7'
         self._w3 = None

@@ -1,9 +1,0 @@
-{
-  "execution_status": "PARTIAL_SUCCESS",
-  "message": "Executed 2 of 3 payments",
-  "executed_payments": [
-    "pay-1",
-    "pay-3"
-  ],
-  "failed_payments": []
-}

@@ -3,8 +3,14 @@ import os
 import json
 import uuid
 from typing import Any, Dict
+from dotenv import load_dotenv, find_dotenv
 
 app = Flask(__name__)
+
+# Prefer local .env for development; fall back to process env (e.g., Render)
+_env_path = find_dotenv()
+if _env_path:
+    load_dotenv(_env_path, override=True)
 
 # In-memory storage for proposals (for demonstration purposes)
 proposals = {}
@@ -59,9 +65,44 @@ def _validate_payment_approval(data: Dict[str, Any]) -> None:
 
 def _make_output_dir() -> str:
     root = os.path.abspath(os.path.dirname(__file__))
-    out = os.path.join(root, 'output')
+    # Allow override via environment for deploys; default to project-local 'tmp'
+    configured = os.environ.get('AGENT_STORAGE_DIR')
+    out = os.path.abspath(configured) if configured else os.path.join(root, 'tmp')
     os.makedirs(out, exist_ok=True)
     return out
+
+def _cleanup_proposal_artifacts(proposal_id: str) -> None:
+    """Best-effort cleanup of on-disk artifacts for a proposal.
+    Does not touch in-memory 'proposals'. Swallows all IO errors.
+    """
+    try:
+        out_dir = _make_output_dir()
+        candidates = [
+            os.path.join(out_dir, f"temp_excel_{proposal_id}.xlsx"),
+            os.path.join(out_dir, f"proposal_{proposal_id}.json"),
+            os.path.join(out_dir, f"execution_result_{proposal_id}.json"),
+        ]
+        for path in candidates:
+            if os.path.exists(path):
+                try:
+                    os.remove(path)
+                except Exception:
+                    pass
+        # Also remove any other files that include the proposal_id substring
+        try:
+            for name in os.listdir(out_dir):
+                if proposal_id in name:
+                    p = os.path.join(out_dir, name)
+                    if os.path.isfile(p):
+                        try:
+                            os.remove(p)
+                        except Exception:
+                            pass
+        except Exception:
+            pass
+        # Optional: if the directory is empty, leave it as-is to avoid race conditions
+    except Exception:
+        pass
 
 def id_provider() -> str:
     """DI-friendly proposal id provider."""
@@ -285,6 +326,12 @@ def get_payment_execution_result(proposal_id):
         
         execution_result = proposal_data['execution_result']
         
+        # Best-effort cleanup of disk artifacts for this proposal before returning
+        try:
+            _cleanup_proposal_artifacts(proposal_id)
+        except Exception:
+            pass
+        
         # Return execution result per API documentation
         return jsonify(execution_result), 200
         
@@ -292,6 +339,7 @@ def get_payment_execution_result(proposal_id):
         return _error(f"Internal error: {e}", 500)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001, debug=True)
+    port = int(os.environ.get('PORT', 5001))
+    app.run(host='0.0.0.0', port=port, debug=True)
 
 

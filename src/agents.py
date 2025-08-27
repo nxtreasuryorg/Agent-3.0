@@ -1,11 +1,14 @@
 from crewai import Agent, LLM
 import os
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
 class TreasuryAgents:
     def __init__(self):
-        # Load environment variables from .env if present
-        load_dotenv()
+        # Load environment variables from .env if present, giving .env precedence locally
+        # If no .env is found, keep existing environment (e.g., Render-provided vars)
+        env_path = find_dotenv()
+        if env_path:
+            load_dotenv(env_path, override=True)
 
         # Require per-agent model configuration (no fallback)
         self._risk_model = os.getenv("RISK_ASSESSOR_MODEL")
