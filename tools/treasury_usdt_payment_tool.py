@@ -10,7 +10,7 @@ from dotenv import load_dotenv, find_dotenv
 from web3 import Web3
 from web3.exceptions import (
     TransactionNotFound, TimeExhausted, MismatchedABI, 
-    InvalidTransaction, BlockNotFound, InvalidAddress, ValidationError
+    InvalidTransaction, BlockNotFound, InvalidAddress, Web3ValidationError
 )
 
 

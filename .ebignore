@@ -1,0 +1,38 @@
+# Virtual environments
+virt/
+venv/
+env/
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Test files
+tests/
+test_data/
+
+# Development files
+.env
+flask_server.py
+
+# Temporary files
+tmp/
+*.log
