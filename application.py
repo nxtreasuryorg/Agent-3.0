@@ -337,6 +337,12 @@ def get_payment_execution_result(proposal_id):
         except Exception:
             pass
         
+        # Clean up in-memory proposal after workflow completion
+        try:
+            del proposals[proposal_id]
+        except Exception:
+            pass  # Fail silently if key doesn't exist
+        
         # Return execution result per API documentation
         return jsonify(execution_result), 200
         

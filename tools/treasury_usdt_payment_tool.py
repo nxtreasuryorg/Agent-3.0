@@ -124,8 +124,8 @@ class TreasuryUSDTPaymentTool(BaseTool):
         
         if not self._w3:
             # Simulation mode
-            eth_balance = random.uniform(0.001, 0.1)
-            usdt_balance = random.uniform(10.0, 1000.0)
+            eth_balance = random.uniform(0.1, 0.5)
+            usdt_balance = random.uniform(2000, 5000)  # Increased to support test payments
             eth_usd_value = eth_balance * 3500  # Mock ETH price
         else:
             try:

@@ -44,7 +44,7 @@ class TreasuryAgents:
         self._payment_llm = LLM(
             model=self._payment_model,
             temperature=0.1,
-            max_tokens=1500,
+            max_tokens=4000,
         )
 
     def risk_assessor(self):
